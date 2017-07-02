@@ -6,6 +6,7 @@
 package wrapper;
 
 import engines.CSVSQLEngine;
+import engines.ComparisonEngine;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -77,15 +78,22 @@ public class CSVDataWrapper {
     
     public static void main(String args[]) throws Exception{
         
-        CSVDataWrapper csvdataobj = new CSVDataWrapper();
-        
-        csvdataobj.setHeaderLine("Product_id,Product_name,Quantity,Price,group,flag_1,flag_2,flag_3,start_dt,end_dt");
-        csvdataobj.SetConnection("E:\\CSV AUTOMATION\\CSV-Files\\output\\Test1\\0605category.csv");
-        
-        
-        List data = csvdataobj.getData("select * from 0605category order by product_id limit 10");
-        
-        System.out.println(data);
-        
+        CSVDataWrapper csvdataobj1 = new CSVDataWrapper();
+        csvdataobj1.setHeaderLine("Product_id,Product_name,Quantity,Price,group,flag_1,flag_2,flag_3,start_dt,end_dt");
+        csvdataobj1.SetConnection("E:\\CSV AUTOMATION\\CSV-Files\\output\\Test1\\0605category.csv");
+        List data1 = csvdataobj1.getData("select * from 0605category where product_id = '125942' order by product_id limit 100");
+        System.out.println(data1);
+        System.out.println("\n");
+        CSVDataWrapper csvdataobj2 = new CSVDataWrapper();
+        csvdataobj2.setHeaderLine("Product_id,Product_name,Quantity,Price,group,flag_1,flag_2,flag_3,start_dt,end_dt");
+        csvdataobj2.SetConnection("E:\\CSV AUTOMATION\\CSV-Files\\output\\Test1\\0606category.csv");
+        List data2 = csvdataobj2.getData("select * from 0606category where product_id = '125942' order by product_id limit 100");
+        System.out.println(data2);
+        System.out.println("\n");
+        //comparison
+        ComparisonEngine ce = new ComparisonEngine();
+        System.out.println(ce.getUnSrcData(data1, data2));
+        System.out.println("\n");
+        System.out.println(ce.getUnTrgData(data1, data2));
     }
 }
