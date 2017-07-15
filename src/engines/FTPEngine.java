@@ -32,6 +32,7 @@ public class FTPEngine {
         
     }
     
+    /*
     public static void main(String[] args){
         
         FTPEngine ftpobj=null;
@@ -64,5 +65,5 @@ public class FTPEngine {
         }
         
     }
-    
+    */
 }

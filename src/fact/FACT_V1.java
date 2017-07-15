@@ -5,13 +5,20 @@
  */
 package fact;
 
+import wrapper.CSVThreadModeler;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import jxl.format.Border;
 
 /**
  *
@@ -19,24 +26,76 @@ import javafx.stage.Stage;
  */
 public class FACT_V1 extends Application {
     
+    Boolean flag = false;
+    
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        Button btn1 = new Button();
+        Button btn2 = new Button();
+        btn1.setMaxSize(150,50);
+        btn2.setMaxSize(150,50);
+        btn1.setText("Start the Schedular");
+        btn2.setText("Run in the Background");
+        btn2.setDisable(true);
+        
+        //calling the scheduler                    
+        FACTScheduler fs = new FACTScheduler();
+        
+        btn1.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
+                
+                try {
+                    if(!btn1.getText().equalsIgnoreCase("stop the schedular"))
+                    {
+                        System.out.println("Starting the Schedular");
+                        btn1.setText("Starting the Schedular");
+                        fs.run();
+                        btn1.setText("Stop the Schedular");
+                        btn2.setDisable(false);
+                    }
+                    else{
+                        System.out.println("Stopping the Schedular");
+                        fs.stop();    
+                        btn1.setText("Start the Schedular");
+                    }
+                    
+                } catch (Exception ex) {
+                    btn1.setText("Error in Starting");
+                    Logger.getLogger(FACT_V1.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
         });
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        btn2.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Running the Scheduler in Background");
+                try {
+                    flag = true;
+                    primaryStage.close();
+                    //System.exit(0);
+                    
+                } catch (Exception ex) {
+                    btn1.setText("Error in Starting");
+                    Logger.getLogger(FACT_V1.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+        });
         
-        Scene scene = new Scene(root, 300, 250);
+        VBox root = new VBox();
         
-        primaryStage.setTitle("Hello World!");
+        root.getChildren().add(btn1);
+        root.getChildren().add(btn2);
+
+        
+        Scene scene = new Scene(root,150,55);
+        
+        primaryStage.setTitle("FACT_V1");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -47,5 +106,14 @@ public class FACT_V1 extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    @Override
+    public void stop() {
+        if(!flag){
+        System.out.println("Exiting the Application");
+        System.exit(0);
+        }
+    }
+    
     
 }
